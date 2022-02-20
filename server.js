@@ -44,6 +44,10 @@ function startingPoint() {
             if (choices === "role_list") {
                 viewRoles()
             }
+
+            if (choices === "employee_list") {
+                viewEmployees()
+            }
       });
 }
 
@@ -60,10 +64,24 @@ const viewDepts = () => {
 
 // function to view all roles
 const viewRoles = () => {
-    const sql =   `SELECT role.id, role.title, role.salary
+    const sql =   `SELECT role.id, role.title, role.salary, department.name AS department
                   FROM role
-                  UNION SELECT department.name AS department
-                  FROM department`;
+                  JOIN department ON role.department_id = department.id`;
+    db.query(sql, (err, res) => {
+        if(err) throw err; 
+        console.table(res);
+        startingPoint();
+    });
+};
+
+// function to view all employees
+const viewEmployees = () => {
+    const sql =   `SELECT employee.id, employee.first_name, employee.last_name, role.title, 
+                    department.department_name AS 'department', role.salary, 
+                    FROM employee, role, department 
+                    WHERE department.id = role.department_id 
+                    AND role.id = employee.role_id
+                    ORDER BY employee.id ASC`;
     db.query(sql, (err, res) => {
         if(err) throw err; 
         console.table(res);
