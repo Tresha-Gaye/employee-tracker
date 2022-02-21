@@ -1,5 +1,4 @@
 // utility to check if an object has the required properties
-
 const validator = require('validator');
 
 const validate = {

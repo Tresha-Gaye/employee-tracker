@@ -1,9 +1,24 @@
 # employee-tracker
 
+## Description
+
+This command-line application was designed to manage a company's employee database. 
+
+You may view the the walkthru video that demonstrates the application's functionality by [clicking this link](https://drive.google.com/file/d/1hqWwyAE9S68q6YcNSzm2foPLz_1JscXC/view).
+
+
+**Technologies**  
+
+The application was created by Node JS with the `Inquirer` and `MySQL2` and `console.table` packages.
+
+**Criteria**
+
+***User Story***
 AS A business owner
 I WANT to be able to view and manage the departments, roles, and employees in my company
 SO THAT I can organize and plan my business
 
+***Acceptance Criteria***
 GIVEN a command-line application that accepts user input
 
 WHEN I start the application
@@ -29,6 +44,43 @@ THEN I am prompted to enter the employee’s first name, last name, role, and ma
 
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+
+**Accomplishment**
+The application successfully allows a user to interact with the datasbe as required, with the following exceptions:
+- The option to create a new role is not yet working, as the new role does not print to the table, as intended;
+- the option to update an employee's data has not been added yet, dut to time constraints 
+These will be added in version 1.1 of the app.
+
+**Below are a screenshots of the app showing the functionality:**
+
+Below are images of how the term looks **when the app is run**, showing user-generated input  
+<br />
+![Employee Tracker](./assets/images/tracker1.jpg)  
+<br />
+![Employee Tracker](./assets/images/tracker2.jpg)  
+
+## Contributing
+
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+
+## Credits
+
+**The following resources were used to complete this project:**
+1. UCONN Coding Bootcamp's modules on Javascript and Node JS
+2. README Guide [How to create a Professional README](./readme-guide.md)
+3. [NodeJs](https://nodejs.org/api/modules.html) Documentation 
+4. [Inquirer](https://www.npmjs.com/package/inquirer/v/8.2.0) Documentation 
+5. [MySQL2](https://www.npmjs.com/package/mysql2) Documentation 
+6. A lot of the server.js/Inquirer code is credited to [this repo](https://github.com/jpd61/employee-tracker) which helped a lot!
+
+## License
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
+
+
+
+
 
 
 

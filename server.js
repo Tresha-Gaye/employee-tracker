@@ -2,30 +2,18 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const db = require('./db/connection');
 const validator = require('validator');
-// const validate = require('../utils/validate');
+const validate = require('./utils/validate');
 
 // Start server after db connection
 // db.connect function runs startingPoint();
-
+// db.query vs db.promise().query?
 db.connect(err => {
     if (err) throw err;
     console.log('Database connected.');
     startingPoint();
 });
 
-const validate = {
-    validateString(str) {
-      return str !== '' || 'Please enter a valid response!';
-    },
-    validateSalary(num) {
-      if (validator.isDecimal(num)) return true;
-      return 'Please enter a valid salary!';
-    },
-    isSame(str1, str2) {
-      if (str1 === str2) return true;
-    }
-  };
-
+// function to intialize the server
 function startingPoint() {
     inquirer.prompt({
         type: "list",
@@ -38,14 +26,14 @@ function startingPoint() {
             { name: "Add a department", value: "add_dept" },
             { name: "Add a role", value: "add_role" },
             { name: "Add an employee", value: "add_employee" },
-            { name: "Update an employee role", value: "update_emp_role" },
-            { name: "Update employee managers", value: "update_emp_mgr" },
-            { name: "View employees by manager", value: "view_by_mgr" },
-            { name: "View employees by department", value: "view_by_dept" },
-            { name: "Delete a department", value: "delete_dept" },
-            { name: "Delete a role", value: "delete_role" },
-            { name: "Delete an employee", value: "delete_employee" },
-            { name: "View combined salaries of all employees in a department", value: "view_salaries" },
+            // { name: "Update an employee role", value: "update_emp_role" },
+            // { name: "Update employee managers", value: "update_emp_mgr" },
+            // { name: "View employees by manager", value: "view_by_mgr" },
+            // { name: "View employees by department", value: "view_by_dept" },
+            // { name: "Delete a department", value: "delete_dept" },
+            // { name: "Delete a role", value: "delete_role" },
+            // { name: "Delete an employee", value: "delete_employee" },
+            // { name: "View combined salaries of all employees in a department", value: "view_salaries" },
             { name: "Exit" }
         ]
     }).then((answers) => {
@@ -77,7 +65,6 @@ function startingPoint() {
             }
       });
 }
-
 
 // function to view departments
 const viewDepts = () => {
@@ -132,6 +119,7 @@ const addNewDept = () => {
             const params = [answer.addedDept];
             db.query(sql, params, (err, res) => {
                 if(err) throw err; 
+                console.log("New department, "  +  params + ", has been added");
                 console.table(res);
                 viewDepts();
             });
@@ -218,7 +206,8 @@ const addNewEmployee = () => {
 };
 
 
-// function to add a new role
+// function to add a new role 
+//** needs works as new role is not printing in the table. why?
 const addNewRole = () => {
     const deptSql = `SELECT * FROM department`;
     db.query(deptSql, (err, res) => {
@@ -263,7 +252,7 @@ const addNewRole = () => {
                       ])
                       .then((answer) => {
                         const addedRole = answer.newRole;
-                        const departmentId;
+                        let departmentId;
             
                         res.forEach((department) => {
                           if (departmentData.departmentName === department.name) {
@@ -273,12 +262,12 @@ const addNewRole = () => {
                         
                        
                         const sql =   `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
-                        const newRoleData = [answer.newRole, answer.newSalary, departmentId];
-                        departmentArray.push(newRoleData);
+                        const newRoleData = [addedRole, answer.newSalary, departmentId];
+                        // departmentArray.push(newRoleData);
 
                         db.query(sql, newRoleData, (err, res) => {
                             if(err) throw err; 
-                            console.log("New role, "  +  newRoleData + " has been added");
+                            console.log("New role, "  +  addedRole + ", has been added");
                             console.table(res);
                             viewRoles();
                         });
@@ -287,6 +276,14 @@ const addNewRole = () => {
     });
 };
 
+
+
+// module.exports = viewDepts;
+// module.exports = viewRoles;
+// module.exports = viewEmployees;
+// module.exports = addNewDept;
+// module.exports = addNewEmployee;
+// module.exports = addNewRole;
 
 // if statements // while loop
 // last questions = exit program? while 'exist_program' = fase un program again
@@ -303,13 +300,14 @@ const addNewRole = () => {
 
 
 
+
 // try this for update functions
     // function ({ first_name, last_name, manager }) {
     // connection.query("INSERT INTO employee (first_name, last_name, manager) 
     //      VALUES ?", ('first_name', 'last_name', 'manager'), function (err, result) {
     //     if (err) throw err;
 
-    //try thi =s for managers
+    //try this for managers
 
     // const getManagers = () => {
     //     return new Promise((resolve, reject) => {
@@ -323,7 +321,8 @@ const addNewRole = () => {
     //     });
     // }
 
-    // const viewEmployeesByManager = async () => {
+    // async functions*** look that up
+    //const viewEmployeesByManager = async () => {
     //     let choices = await employeeDB_CRUD.getManagers();
     //     console.log(choices);
     //     return new Promise( (resolve, reject) => {
