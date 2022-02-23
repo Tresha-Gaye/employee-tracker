@@ -81,8 +81,3 @@ Below are images of how the term looks **when the app is run**, showing user-gen
 
 
 
-
-
-
-
-credit: https://github.com/jpd61/employee-tracker/blob/master/server.js 
