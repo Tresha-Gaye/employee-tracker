@@ -18,13 +18,6 @@ function startingPoint() {
             { name: "Add a role", value: "add_role" },
             { name: "Add an employee", value: "add_employee" },
             { name: "Update an employee role", value: "update_emp_role" },
-            // { name: "Update employee managers", value: "update_emp_mgr" },
-            // { name: "View employees by manager", value: "view_by_mgr" },
-            // { name: "View employees by department", value: "view_by_dept" },
-            // { name: "Delete a department", value: "delete_dept" },
-            // { name: "Delete a role", value: "delete_role" },
-            // { name: "Delete an employee", value: "delete_employee" },
-            // { name: "View combined salaries of all employees in a department", value: "view_salaries" },
             { name: "Exit" }
         ]
     }).then(async(answers) => {
@@ -202,7 +195,6 @@ const addNewEmployee = () => {
 };
 
 // function to add a new role 
-// ** needs works as new role is not printing in the table. why?
 const addNewRole = () => {
     const deptSql = `SELECT * FROM department`;
     db.query(deptSql, (err, res) => {
@@ -241,15 +233,6 @@ const addNewRole = () => {
                       .then((answer) => {
                         console.log(answer)
 
-                        // this is no longer needed as we included name & value (id) in department push, above
-                        // let departmentId;
-                        // res.forEach((department) => {
-                        //   if (answer.newDept === department.name) {
-                        //       departmentId = department.id;
-                        //       console.log(departmentId);
-                        //     }
-                        // });
-                        
                         const addedRole = answer.newRole;
                         const sql =   `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
                         const newRoleData = [addedRole, answer.newSalary, answer.newDept];

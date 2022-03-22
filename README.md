@@ -4,7 +4,7 @@
 
 This command-line application was designed to manage a company's employee database. 
 
-You may view the the walkthru video that demonstrates the application's functionality by [clicking this link](https://drive.google.com/file/d/1hqWwyAE9S68q6YcNSzm2foPLz_1JscXC/view).
+You may view the the walkthru video that demonstrates the application's functionality by [clicking this link](https://drive.google.com/file/d/1At5Xm6YSoIBygz9FV-6yjQz0F3XVwIa8/view).
 
 
 **Technologies**  
@@ -46,10 +46,9 @@ WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 
 **Accomplishment**
-The application successfully allows a user to interact with the datasbe as required, with the following exceptions:
-- The option to create a new role is not yet working, as the new role does not print to the table, as intended;
-- the option to update an employee's data has not been added yet, dut to time constraints 
-These will be added in version 1.1 of the app.
+The application successfully allows a user to interact with the database as required. The following options were updated and are now working in version 1.1:
+- The option to create a new role works, as the new role prints to the table, as intended;
+- the option to update an employee's data has been added.
 
 **Below are a screenshots of the app showing the functionality:**
 
