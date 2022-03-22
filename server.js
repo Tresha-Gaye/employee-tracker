@@ -23,7 +23,7 @@ db.connect(err => {
 
 // if statements // while loop
 // last questions = exit program? while 'exist_program' = fase un program again
-// onc enquiruer starts asking it will not wait, if asking questions & expecting something to happen
+// once enquiruer starts asking it will not wait, if asking questions & expecting something to happen
 // beak up inquirier qiestions into smaller chunks, call different functions
 // once code exeuction finishes it will return bac to original while loo
 // lots of .thens

@@ -17,7 +17,7 @@ function startingPoint() {
             { name: "Add a department", value: "add_dept" },
             { name: "Add a role", value: "add_role" },
             { name: "Add an employee", value: "add_employee" },
-            // { name: "Update an employee role", value: "update_emp_role" },
+            { name: "Update an employee role", value: "update_emp_role" },
             // { name: "Update employee managers", value: "update_emp_mgr" },
             // { name: "View employees by manager", value: "view_by_mgr" },
             // { name: "View employees by department", value: "view_by_dept" },
@@ -54,8 +54,11 @@ function startingPoint() {
             if (choices === "add_employee") {
                 await addNewEmployee()
             }
-  
-   
+
+            if (choices === "update_emp_role") {
+                await updateEmpRole()
+            }
+     
       })
 }
 
@@ -199,33 +202,21 @@ const addNewEmployee = () => {
 };
 
 // function to add a new role 
-//** needs works as new role is not printing in the table. why?
+// ** needs works as new role is not printing in the table. why?
 const addNewRole = () => {
     const deptSql = `SELECT * FROM department`;
     db.query(deptSql, (err, res) => {
-        if(err) {throw err;}
+        if(err) {
+            throw err;
+        };
         let departmentArray = [];
-        res.forEach((department) => {departmentArray.push(department.name);});
-        departmentArray.push('Create Department');
+        res.forEach((department) => {departmentArray.push( 
+          {
+            name: department.name,
+            value: department.id
+          }
+        );});
 
-        inquirer
-            .prompt([
-                {
-                type: 'input',
-                name: 'deptRole',
-                message: 'Which department is this new role located?',
-                choices: departmentArray
-                }
-            ])
-            .then((answer) => {
-                if (answer.deptRole === 'Create Department') {
-                    this.addNewDept();
-                  } else {
-                    roleData(answer);
-                  }
-                });
-
-                const roleData = (departmentData) => {
                     inquirer
                       .prompt([
                         {
@@ -239,34 +230,103 @@ const addNewRole = () => {
                           name: 'newSalary',
                           message: 'What is the salary of this new role?',
                           validate: validate.validateSalary
+                        },
+                        {
+                          type: 'list',
+                          name: 'newDept',
+                          message: 'What department is the role in?',
+                          choices: departmentArray
                         }
                       ])
                       .then((answer) => {
-                        const addedRole = answer.newRole;
-                        let departmentId;
-            
-                        res.forEach((department) => {
-                          if (departmentData.departmentName === department.name) {
-                              departmentId = department.id;
-                            }
-                        });
+                        console.log(answer)
+
+                        // this is no longer needed as we included name & value (id) in department push, above
+                        // let departmentId;
+                        // res.forEach((department) => {
+                        //   if (answer.newDept === department.name) {
+                        //       departmentId = department.id;
+                        //       console.log(departmentId);
+                        //     }
+                        // });
                         
-                       
+                        const addedRole = answer.newRole;
                         const sql =   `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
-                        const newRoleData = [addedRole, answer.newSalary, departmentId];
-                        // departmentArray.push(newRoleData);
+                        const newRoleData = [addedRole, answer.newSalary, answer.newDept];
 
                         db.query(sql, newRoleData, (err, res) => {
                             if(err) throw err; 
                             console.log("New role, "  +  addedRole + ", has been added");
-                            console.table(res);
-                            viewRoles();
+                            startingPoint();
                         });
                       });
-                };
-    });
-};
+        });
+    };
 
+
+// Update an Employee's Role
+const updateEmpRole = () => {
+    let sql =       `SELECT employee.id, employee.first_name, employee.last_name, role.id AS "role_id"
+                    FROM employee, role, department WHERE department.id = role.department_id AND role.id = employee.role_id`;
+    db.query(sql, (error, emplData) => {
+      if (error) throw error;
+      let employeeNamesArray = [];
+      emplData.forEach((employee) => {employeeNamesArray.push(`${employee.first_name} ${employee.last_name}`);});
+
+      let sql =     `SELECT role.id, role.title FROM role`;
+      db.query(sql, (error, response) => {
+        if (error) throw error;
+        let rolesArray = [];
+        response.forEach((role) => {rolesArray.push(role.title);});
+
+        inquirer
+          .prompt([
+            {
+              name: 'chosenEmployee',
+              type: 'list',
+              message: 'Which employee has a new role?',
+              choices: employeeNamesArray
+            },
+            {
+              name: 'chosenRole',
+              type: 'list',
+              message: 'What is their new role?',
+              choices: rolesArray
+            }
+          ])
+          .then((answer) => {
+            let newTitleId, employeeId;
+            console.log(response);
+            response.forEach((role) => {
+              if (answer.chosenRole === role.title) {
+                newTitleId = role.id;
+              }
+            });
+
+            emplData.forEach((employee) => {
+              if (
+                answer.chosenEmployee ===
+                `${employee.first_name} ${employee.last_name}`
+              ) {
+                employeeId = employee.id;
+              }
+            });
+            console.log("this is the new", employeeId)
+            console.log("this is the new", newTitleId)
+            let sqls =    `UPDATE employee SET employee.role_id = ? WHERE employee.id = ?`;
+            db.query(
+              sqls,
+              [newTitleId, employeeId],
+              (error) => {
+                if (error) throw error;
+                console.log("Role has been updated");
+                startingPoint();
+              }
+            );
+          });
+      });
+    });
+  };
 
 module.exports = {
     startingPoint
